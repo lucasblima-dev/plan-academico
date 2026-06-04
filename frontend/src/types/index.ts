@@ -10,6 +10,7 @@ export interface HistoricoParseado {
   periodo_atual: number // número real do período
   semestre_atual: number
   disciplinas_aprovadas: string[]  // IDs do grade.json
+  disciplinas_cursando: string[]   // IDs do grade.json (situação MATR)
   nao_mapeadas: DisciplinaNaoMapeada[]
 }
 
@@ -45,6 +46,7 @@ export interface NoGrafo {
   periodo_recomendado: number
   semestre_oferta: number
   aprovada: boolean
+  cursando: boolean                // aluno está matriculado agora
   disponivel: boolean              // sem pré-requisitos pendentes
   caminho_critico: boolean
 }
@@ -71,7 +73,8 @@ export interface DisciplinaGrade {
   semestre_oferta: number
   pre_requisitos: string[]
   tipo: string
-  notas: string
+  notes?: string
+  notas?: string
 }
 
 export interface GradeCurricular {

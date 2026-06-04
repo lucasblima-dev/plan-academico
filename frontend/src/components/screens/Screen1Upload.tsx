@@ -54,6 +54,7 @@ export function Screen1Upload({ onUpload, loading, error }: Screen1UploadProps) 
         periodo_recomendado: d.periodo_recomendado,
         semestre_oferta: d.semestre_oferta,
         aprovada: false,
+        cursando: false,
         disponivel: true,
         caminho_critico: false
       }))
@@ -180,7 +181,7 @@ export function Screen1Upload({ onUpload, loading, error }: Screen1UploadProps) 
             </div>
             
             <div className="flex-1 p-4 bg-slate-50 dark:bg-slate-950">
-              <GraphView nos={gradeData.nos} arestas={gradeData.arestas} />
+              <GraphView nos={gradeData.nos} arestas={gradeData.arestas} exibirLegenda={false} />
             </div>
           </div>
         </div>

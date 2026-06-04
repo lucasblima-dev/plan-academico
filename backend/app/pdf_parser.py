@@ -75,6 +75,7 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
     periodo_atual = 1
     semestre_atual = 1
     disciplinas_aprovadas = []
+    disciplinas_cursando = []
     nao_mapeadas = []
 
     with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
@@ -150,32 +151,33 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
                         if not encontrou: continue
 
                     mapped_id = SIGAA_PARA_ID.get(codigo)
+                    
+                    # Limpar nome (remover docente e códigos entre parênteses)
+                    nome_limpo = nome_raw.split("\n")[0]
+                    nome_limpo = re.sub(r'\(\d+\)', '', nome_limpo).strip()
+
                     if situacao in SITUACOES_APROVADAS:
                         if mapped_id:
                             disciplinas_aprovadas.append(mapped_id)
                         else:
-                            # Limpar nome (remover docente e códigos entre parênteses)
-                            nome_limpo = nome_raw.split("\n")[0]
-                            nome_limpo = re.sub(r'\(\d+\)', '', nome_limpo).strip()
-                            
                             nao_mapeadas.append(DisciplinaNaoMapeada(
                                 codigo_sigaa=codigo,
                                 nome_sigaa=nome_limpo,
                                 situacao=situacao
                             ))
-                    elif situacao == "MATR" and not mapped_id:
-                        # Optativas em curso também vão para não mapeadas para conciliação prévia
-                        nome_limpo = nome_raw.split("\n")[0]
-                        nome_limpo = re.sub(r'\(\d+\)', '', nome_limpo).strip()
-                        
-                        nao_mapeadas.append(DisciplinaNaoMapeada(
-                            codigo_sigaa=codigo,
-                            nome_sigaa=nome_limpo,
-                            situacao=situacao
-                        ))
+                    elif situacao == "MATR":
+                        if mapped_id:
+                            disciplinas_cursando.append(mapped_id)
+                        else:
+                            nao_mapeadas.append(DisciplinaNaoMapeada(
+                                codigo_sigaa=codigo,
+                                nome_sigaa=nome_limpo,
+                                situacao=situacao
+                            ))
 
     # Remover duplicatas mantendo a ordem
     disciplinas_aprovadas = list(dict.fromkeys(disciplinas_aprovadas))
+    disciplinas_cursando = list(dict.fromkeys(disciplinas_cursando))
 
     return HistoricoParseado(
         nome_aluno=nome_aluno,
@@ -183,5 +185,6 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
         periodo_atual=periodo_atual,
         semestre_atual=semestre_atual,
         disciplinas_aprovadas=disciplinas_aprovadas,
+        disciplinas_cursando=disciplinas_cursando,
         nao_mapeadas=nao_mapeadas
     )

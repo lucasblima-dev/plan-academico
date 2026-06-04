@@ -12,6 +12,7 @@ class HistoricoParseado(BaseModel):
     periodo_atual: int           # (número real do período)
     semestre_atual: int          # 1 (ímpar) ou 2 (par)
     disciplinas_aprovadas: List[str]  # lista de IDs do grade.json
+    disciplinas_cursando: List[str] = [] # lista de IDs do grade.json (situação MATR)
     nao_mapeadas: List[DisciplinaNaoMapeada]
 
 class PlanejamentoRequest(BaseModel):
@@ -49,6 +50,7 @@ class NoGrafo(BaseModel):
     periodo_recomendado: int
     semestre_oferta: int
     aprovada: bool
+    cursando: bool = False       # aluno está matriculado agora
     disponivel: bool             # sem pré-requisitos pendentes
     caminho_critico: bool        # está no caminho crítico do DAG
 
