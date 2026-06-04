@@ -11,4 +11,8 @@ dist/
 .vscode/
 .idea/
 
+# Dados para teste/validação
+
 docs/TASK.md
+
+/backend/samples/historico_lucas.pdf
