@@ -65,65 +65,68 @@ Não criar pastas ou arquivos fora desta estrutura sem justificativa explícita.
 
 O projeto usa **Tailwind CSS com dark mode via classe** (`darkMode: 'class'`). O `ThemeProvider` adiciona/remove a classe `dark` no elemento `<html>`.
 
-Paleta semântica — definir como extensão no `tailwind.config.js`:
+Paleta semântica em `style.css`:
 
-```js
-// tailwind.config.js
-export default {
-  darkMode: 'class',
-  content: ['./index.html', './src/**/*.{ts,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        // Superfícies
-        surface: {
-          base:    { DEFAULT: '#F8FAFC', dark: '#0F172A' },
-          card:    { DEFAULT: '#FFFFFF', dark: '#1E293B' },
-          subtle:  { DEFAULT: '#F1F5F9', dark: '#263248' },
-        },
-        // Primária
-        brand: {
-          DEFAULT: '#1E3A5F',
-          hover:   '#16304F',
-          light:   '#EFF6FF',
-          dark:    '#3B82F6',
-        },
-        // Acento
-        accent: {
-          DEFAULT: '#2563EB',
-          hover:   '#1D4ED8',
-          light:   '#DBEAFE',
-        },
-        // Nós do grafo
-        node: {
-          approved:  '#22C55E',
-          available: '#3B82F6',
-          critical:  '#F97316',
-          blocked:   '#94A3B8',
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
-      },
-      boxShadow: {
-        card: '0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06)',
-      },
-      borderRadius: {
-        xl2: '16px',
-      },
-    },
-  },
-  plugins: [],
+```css
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* 1. Tokens do Tailwind mapeados para as variáveis dinâmicas */
+@theme {
+  --color-surface-base: var(--surface-base);
+  --color-surface-card: var(--surface-card);
+  --color-surface-subtle: var(--surface-subtle);
+  
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-light: var(--brand-light);
+  --color-brand-dark: var(--brand-dark);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+
+  --color-node-approved: #22C55E;
+  --color-node-available: #3B82F6;
+  --color-node-critical: #F97316;
+  --color-node-blocked: #94A3B8;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+}
+
+/* 2. Valores para o Modo Claro */
+:root {
+  --surface-base: #F8FAFC;
+  --surface-card: #FFFFFF;
+  --surface-subtle: #E2E8F0;
+  
+  --brand: #1E3A5F;
+  --brand-hover: #16304F;
+  --brand-light: #EFF6FF;
+  --brand-dark: #3B82F6;
+
+  --accent: #2563EB;
+  --accent-hover: #1D4ED8;
+}
+
+/* 3. Valores para o Modo Escuro */
+.dark {
+  --surface-base: #0F172A;
+  --surface-card: #1E293B;
+  --surface-subtle: #334155;
+
+  --accent: #3B82F6;
+  --accent-hover: #60A5FA;
 }
 ```
 
 ### 3.2 Convenção de classes dark mode
 
-Sempre usar o modificador `dark:` do Tailwind. Nunca usar variáveis CSS inline para cores — usar classes Tailwind. Exemplo de card:
+Regra de Ouro: Graças às variáveis CSS dinâmicas configuradas acima, não use o modificador `dark`: para cores de background e texto mapeadas no `@theme`. Use sempre as cores semânticas; elas se adaptam sozinhas.
 
 ```tsx
-<div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-card">
+<div className="bg-surface-card border border-surface-subtle rounded-xl shadow-card">
+</div>
 ```
 
 ### 3.3 Tipografia
@@ -155,13 +158,14 @@ Padrão de botão primário:
 <button
   className={clsx(
     'px-4 py-2 rounded-lg font-medium text-sm transition-all duration-150',
-    'bg-accent-DEFAULT hover:bg-accent-hover text-white',
-    'dark:bg-blue-500 dark:hover:bg-blue-400',
-    'focus:outline-none focus:ring-2 focus:ring-accent-DEFAULT focus:ring-offset-2',
+    'bg-accent hover:bg-accent-hover text-white',
+    'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
     'disabled:opacity-50 disabled:cursor-not-allowed',
     loading && 'cursor-wait'
   )}
 >
+  Gerar Planejamento
+</button>
 ```
 
 ---
@@ -859,21 +863,9 @@ interface CompareViewProps {
 ```bash
 npm create vite@latest frontend -- --template react-ts
 cd frontend
-npm install axios @xyflow/react dagre clsx tailwindcss autoprefixer postcss
+npm install axios @xyflow/react dagre clsx
 npm install -D @types/dagre
-npx tailwindcss init -p
-```
-
-### `vite.config.ts`
-
-```ts
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  server: { host: true, port: 5173 },
-})
+# O tailwind irei instalar manualmente, por ser na v4. 
 ```
 
 ### `frontend/.env`

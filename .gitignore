@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+venv/
+node_modules/
+.env
+*.pdf
+!backend/samples/*.pdf
+dist/
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# Dados para teste/validação
+
+docs/TASK.md
+
+/backend/samples/historico_lucas.pdf
