@@ -1,5 +1,3 @@
-// ── Parser output ──────────────────────────────────────────────────────────
-
 export interface DisciplinaNaoMapeada {
   codigo_sigaa: string
   nome_sigaa: string
@@ -13,8 +11,6 @@ export interface HistoricoParseado {
   disciplinas_aprovadas: string[]  // IDs do grade.json
   nao_mapeadas: DisciplinaNaoMapeada[]
 }
-
-// ── Planejamento ───────────────────────────────────────────────────────────
 
 export interface DisciplinaPlano {
   id: string
@@ -42,8 +38,6 @@ export interface Plano {
   total_carga_horaria: number
 }
 
-// ── Grafo ──────────────────────────────────────────────────────────────────
-
 export interface NoGrafo {
   id: string
   nome: string
@@ -66,8 +60,6 @@ export interface ResultadoPlanejar {
   disciplinas_pendentes: number
   disciplinas_aprovadas: number
 }
-
-// ── Estado global ──────────────────────────────────────────────────────────
 
 export type FlowStep = 'upload' | 'preview' | 'planning'
 

@@ -59,8 +59,21 @@ def bfs_cpm(
         # 4. Prioridade por Caminho Crítico (CPM) decrescente
         disponiveis.sort(key=lambda n: cpm[n], reverse=True)
 
-        # 5. Selecionar até max_disciplinas
-        selecionados = disponiveis[:max_disciplinas]
+        # 5. Selecionar até max_disciplinas respeitando a restrição de 1 UCE por semestre
+        selecionados = []
+        tem_uce = False
+        
+        for n in disponiveis:
+            if len(selecionados) >= max_disciplinas:
+                break
+            
+            is_uce = G_trabalho.nodes[n].get('tipo') == 'uce'
+            if is_uce:
+                if not tem_uce:
+                    selecionados.append(n)
+                    tem_uce = True
+            else:
+                selecionados.append(n)
 
         # 6. Criar objeto SemestrePlano
         disciplinas_plano = []

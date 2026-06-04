@@ -43,14 +43,25 @@
 
 /* 3. Valores para o Modo Escuro */
 .dark {
-  --surface-base: #0F172A;
-  --surface-card: #1E293B;
-  --surface-subtle: #334155;
+  --surface-base: #020617; /* Slate 950 */
+  --surface-card: #0f172a; /* Slate 900 */
+  --surface-subtle: #1e293b; /* Slate 800 */
 
-  --accent: #3B82F6;
-  --accent-hover: #60A5FA;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  
+  --brand-light: #1e293b; /* Ajuste para o hover do dropzone no dark mode */
 }
 
 body {
-  @apply bg-surface-base transition-colors duration-200;
+  @apply bg-surface-base text-slate-900 dark:text-slate-100 transition-colors duration-200;
+}
+
+/* Reset para inputs e selects no dark mode */
+.dark select, .dark input {
+  @apply bg-surface-card border-surface-subtle text-slate-100;
+}
+
+.dark option {
+  @apply bg-slate-900 text-slate-100;
 }
