@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app:ro
+      - ./backend/data:/app/data:ro
+      - ./backend/samples:/app/samples:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    # Nota: No Docker Compose, se o navegador do usuário acessa localhost:5173,
+    # ele deve tentar acessar o backend em localhost:8000 (do ponto de vista do browser).
+    # Se o frontend fizesse SSR, seria http://backend:8000.
+    depends_on:
+      backend:
+        condition: service_healthy

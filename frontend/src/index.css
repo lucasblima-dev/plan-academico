@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* 1. Tokens do Tailwind mapeados para as variáveis dinâmicas */
+@theme {
+  --color-surface-base: var(--surface-base);
+  --color-surface-card: var(--surface-card);
+  --color-surface-subtle: var(--surface-subtle);
+  
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-light: var(--brand-light);
+  --color-brand-dark: var(--brand-dark);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+
+  --color-node-approved: #22C55E;
+  --color-node-available: #3B82F6;
+  --color-node-critical: #F97316;
+  --color-node-blocked: #94A3B8;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+}
+
+/* 2. Valores para o Modo Claro */
+:root {
+  --surface-base: #F8FAFC;
+  --surface-card: #FFFFFF;
+  --surface-subtle: #E2E8F0;
+  
+  --brand: #1E3A5F;
+  --brand-hover: #16304F;
+  --brand-light: #EFF6FF;
+  --brand-dark: #3B82F6;
+
+  --accent: #2563EB;
+  --accent-hover: #1D4ED8;
+
+  font-family: 'Inter', sans-serif;
+}
+
+/* 3. Valores para o Modo Escuro */
+.dark {
+  --surface-base: #020617; /* Slate 950 */
+  --surface-card: #0f172a; /* Slate 900 */
+  --surface-subtle: #1e293b; /* Slate 800 */
+
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  
+  --brand-light: #1e293b; /* Ajuste para o hover do dropzone no dark mode */
+}
+
+body {
+  @apply bg-surface-base text-slate-900 dark:text-slate-100 transition-colors duration-200;
+}
+
+/* Reset para inputs e selects no dark mode */
+.dark select, .dark input {
+  @apply bg-surface-card border-surface-subtle text-slate-100;
+}
+
+.dark option {
+  @apply bg-slate-900 text-slate-100;
+}

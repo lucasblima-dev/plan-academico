@@ -1,0 +1,626 @@
+{
+  "curso": "Ciência da Computação",
+  "grade": "2023.1",
+  "instituicao": "UERN",
+  "total_periodos": 8,
+  "disciplinas": [
+    {
+      "id": "FILOS",
+      "nome": "Filosofia da Ciência",
+      "periodo_recomendado": 1,
+      "creditos": 2,
+      "carga_horaria": 30,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "LOGMAT",
+      "nome": "Lógica Matemática Aplicada à Computação",
+      "periodo_recomendado": 1,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "ALGPROG",
+      "nome": "Algoritmos e Programação",
+      "periodo_recomendado": 1,
+      "creditos": 6,
+      "carga_horaria": 90,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "PRODTXT1",
+      "nome": "Produção Textual",
+      "periodo_recomendado": 1,
+      "creditos": 2,
+      "carga_horaria": 30,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "MATFUND",
+      "nome": "Matemática Fundamental",
+      "periodo_recomendado": 1,
+      "creditos": 6,
+      "carga_horaria": 90,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "TECS",
+      "nome": "Tecnologia, Ética e Sociedade",
+      "periodo_recomendado": 1,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "FISCOMP",
+      "nome": "Física para Computação",
+      "periodo_recomendado": 1,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "INGLES",
+      "nome": "Inglês Técnico",
+      "periodo_recomendado": 2,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": "Verificar se há pré-requisito formal com alguma disciplina do 1º período"
+    },
+    {
+      "id": "CALC1",
+      "nome": "Cálculo",
+      "periodo_recomendado": 2,
+      "creditos": 6,
+      "carga_horaria": 90,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "MATFUND"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "METCIENT",
+      "nome": "Metodologia para o Trabalho Científico",
+      "periodo_recomendado": 2,
+      "creditos": 2,
+      "carga_horaria": 30,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "UCE1",
+      "nome": "UCE (1º ocorrência)",
+      "periodo_recomendado": 2,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "uce",
+      "notas": ""
+    },
+    {
+      "id": "TECPROG",
+      "nome": "Técnicas de Programação",
+      "periodo_recomendado": 2,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "ALGPROG"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "GEOANA",
+      "nome": "Geometria Analítica",
+      "periodo_recomendado": 2,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "CIRCDIG",
+      "nome": "Circuitos Digitais",
+      "periodo_recomendado": 2,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "LOGMAT"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "ESTDADOS",
+      "nome": "Estrutura de Dados",
+      "periodo_recomendado": 3,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "TECPROG"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "PARAD",
+      "nome": "Paradigmas de Programação",
+      "periodo_recomendado": 3,
+      "creditos": 2,
+      "carga_horaria": 30,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "ALGPROG"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "ARQUCOMP",
+      "nome": "Arquitetura de Computadores",
+      "periodo_recomendado": 3,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "CIRCDIG"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "ENGSW",
+      "nome": "Engenharia de Software",
+      "periodo_recomendado": 3,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "PROBEST",
+      "nome": "Probabilidade e Estatística",
+      "periodo_recomendado": 3,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "ALGLIN",
+      "nome": "Álgebra Linear",
+      "periodo_recomendado": 3,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "GEOANA"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "UCE2",
+      "nome": "UCE (2º ocorrência)",
+      "periodo_recomendado": 3,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "uce",
+      "notas": ""
+    },
+    {
+      "id": "CALCNUM",
+      "nome": "Cálculo Numérico Computacional",
+      "periodo_recomendado": 4,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "TECPROG"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "APS",
+      "nome": "Análise e Projeto de Sistemas",
+      "periodo_recomendado": 4,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "ENGSW"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "BD",
+      "nome": "Banco de Dados",
+      "periodo_recomendado": 4,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "POO",
+      "nome": "Programação Orientada a Objetos",
+      "periodo_recomendado": 4,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "TECPROG"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "SO",
+      "nome": "Sistemas Operacionais",
+      "periodo_recomendado": 4,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "ARQUCOMP"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "TRANSDAT",
+      "nome": "Transmissão de Dados",
+      "periodo_recomendado": 4,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "FISCOMP"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "UCE3",
+      "nome": "UCE (3º ocorrência)",
+      "periodo_recomendado": 4,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "uce",
+      "notas": ""
+    },
+    {
+      "id": "TEOCOMP",
+      "nome": "Teoria da Computação",
+      "periodo_recomendado": 5,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "ESTDADOS"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "IA",
+      "nome": "Inteligência Artificial",
+      "periodo_recomendado": 5,
+      "creditos": 6,
+      "carga_horaria": 90,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "POO",
+        "CALCNUM"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "UCE4",
+      "nome": "UCE (4º ocorrência)",
+      "periodo_recomendado": 5,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "uce",
+      "notas": ""
+    },
+    {
+      "id": "REDES",
+      "nome": "Redes de Computadores",
+      "periodo_recomendado": 5,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "TRANSDAT"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "OPT1",
+      "nome": "Optativa I",
+      "periodo_recomendado": 5,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "optativa",
+      "notas": "Optativas são livres de pré-requisito formal na grade, desde que tenha disponibilidade de horário."
+    },
+    {
+      "id": "OPT2",
+      "nome": "Optativa II",
+      "periodo_recomendado": 5,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "optativa",
+      "notas": "Optativas são livres de pré-requisito formal na grade, desde que tenha disponibilidade de horário."
+    },
+    {
+      "id": "TEOGRAF",
+      "nome": "Teoria dos Grafos",
+      "periodo_recomendado": 5,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "ESTDADOS"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "UCE5",
+      "nome": "UCE (5º ocorrência)",
+      "periodo_recomendado": 6,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "uce",
+      "notas": ""
+    },
+    {
+      "id": "PRODCIENT",
+      "nome": "Produção Científica",
+      "periodo_recomendado": 6,
+      "creditos": 2,
+      "carga_horaria": 30,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "OPT3",
+      "nome": "Optativa III",
+      "periodo_recomendado": 6,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "optativa",
+      "notas": "Optativas são livres de pré-requisito formal na grade, desde que tenha disponibilidade de horário."
+    },
+    {
+      "id": "SISDIST",
+      "nome": "Sistemas Distribuídos",
+      "periodo_recomendado": 6,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "REDES"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "COMPGRAF",
+      "nome": "Computação Gráfica",
+      "periodo_recomendado": 6,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "ESTDADOS"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "OPT4",
+      "nome": "Optativa IV",
+      "periodo_recomendado": 6,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "optativa",
+      "notas": "Optativas são livres de pré-requisito formal na grade, desde que tenha disponibilidade de horário."
+    },
+    {
+      "id": "COMPALG",
+      "nome": "Complexidade de Algoritmos",
+      "periodo_recomendado": 6,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "ESTDADOS"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "UCE6",
+      "nome": "UCE (6º ocorrência)",
+      "periodo_recomendado": 7,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "uce",
+      "notas": ""
+    },
+    {
+      "id": "PROGPAR",
+      "nome": "Programação Paralela",
+      "periodo_recomendado": 7,
+      "creditos": 2,
+      "carga_horaria": 30,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "SO"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "OPT5",
+      "nome": "Optativa V",
+      "periodo_recomendado": 7,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "optativa",
+      "notas": "Optativas são livres de pré-requisito formal na grade, desde que tenha disponibilidade de horário."
+    },
+    {
+      "id": "TGAEMP",
+      "nome": "Teoria Geral de Adm. e Empreendedorismo",
+      "periodo_recomendado": 7,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "VISCOMP",
+      "nome": "Processamento de Imagem e Visão Computacional",
+      "periodo_recomendado": 7,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "ESTDADOS"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "PTCC",
+      "nome": "Projeto de Trabalho de Conclusão de Curso",
+      "periodo_recomendado": 7,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "SO",
+        "SISDIST",
+        "PRODCIENT",
+        "IA",
+        "APS",
+        "COMPGRAF"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "COMP",
+      "nome": "Compiladores",
+      "periodo_recomendado": 7,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 1,
+      "pre_requisitos": [
+        "TEOCOMP"
+      ],
+      "tipo": "obrigatoria",
+      "notas": ""
+    },
+    {
+      "id": "OPT6",
+      "nome": "Optativa VI",
+      "periodo_recomendado": 8,
+      "creditos": 4,
+      "carga_horaria": 60,
+      "semestre_oferta": 2,
+      "pre_requisitos": [],
+      "tipo": "optativa",
+      "notas": ""
+    },
+    {
+      "id": "TCC",
+      "nome": "Trabalho de Conclusão de Curso",
+      "periodo_recomendado": 8,
+      "creditos": 8,
+      "carga_horaria": 120,
+      "semestre_oferta": 2,
+      "pre_requisitos": [
+        "PTCC"
+      ],
+      "tipo": "obrigatoria",
+      "notas": "TCC depende do Projeto de TCC"
+    }
+  ],
+  "notas_gerais": [
+    "Semestre de oferta: assumido como ímpar para períodos 1,3,5,7 e par para períodos 2,4,6,8."
+  ]
+}
