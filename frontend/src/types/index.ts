@@ -62,6 +62,27 @@ export interface ResultadoPlanejar {
   disciplinas_aprovadas: number
 }
 
+export interface DisciplinaGrade {
+  id: string
+  nome: string
+  periodo_recomendado: number
+  creditos: number
+  carga_horaria: number
+  semestre_oferta: number
+  pre_requisitos: string[]
+  tipo: string
+  notas: string
+}
+
+export interface GradeCurricular {
+  curso: string
+  grade: string
+  instituicao: string
+  total_periodos: number
+  disciplinas: DisciplinaGrade[]
+  notas_gerais: string[]
+}
+
 export type FlowStep = 'upload' | 'preview' | 'planning'
 
 export interface MapeamentoOptativa {
