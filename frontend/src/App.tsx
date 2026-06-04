@@ -42,7 +42,7 @@ export default function App() {
         {state.step === 'planning' && state.resultado && (
           <Screen3Results 
             resultado={state.resultado} 
-            semestreAtual={state.historico!.semestre_atual} 
+            periodoAtual={state.historico!.periodo_atual} 
           />
         )}
       </main>

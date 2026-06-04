@@ -12,7 +12,7 @@ import {
   ReactFlowProvider,
 } from '@xyflow/react'
 import type { NodeProps, Edge, Node } from '@xyflow/react'
-import dagre from 'dagre'
+//import dagre from 'dagre'
 import '@xyflow/react/dist/style.css'
 import type { NoGrafo, ArestaGrafo } from '../../types'
 import { Maximize, Layers, Info } from 'lucide-react'
@@ -22,32 +22,30 @@ interface GraphViewProps {
   arestas: ArestaGrafo[]
 }
 
-const nodeWidth = 200
-const nodeHeight = 80
+//const nodeWidth = 220
+//const nodeHeight = 80
 
-const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => {
-  const dagreGraph = new dagre.graphlib.Graph()
-  dagreGraph.setDefaultEdgeLabel(() => ({}))
-  dagreGraph.setGraph({ rankdir: direction, nodesep: 50, ranksep: 100 })
-
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight })
-  })
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target)
-  })
-
-  dagre.layout(dagreGraph)
+const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
+  const xSpacing = 350
+  const ySpacing = 120
+  const periodCounts: Record<number, number> = {}
 
   const layoutedNodes = nodes.map((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id)
+    const nodeData = node.data as unknown as NoGrafo
+    const period = nodeData.periodo_recomendado || 1
+
+    if (periodCounts[period] === undefined) {
+      periodCounts[period] = 0
+    }
+
+    const x = (period - 1) * xSpacing
+    const y = periodCounts[period] * ySpacing
+
+    periodCounts[period]++
+
     return {
       ...node,
-      position: {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
-      },
+      position: { x, y },
     }
   })
 
@@ -69,7 +67,7 @@ const CustomNode = ({ data }: NodeProps) => {
 
   return (
     <div className={`px-4 py-3 shadow-xl rounded-2xl border-2 transition-all hover:scale-105 duration-300 ${nodeStyle} min-w-[200px]`}>
-      <Handle type="target" position={Position.Top} className="w-3 h-3 !bg-white/30 border-none" />
+      <Handle type="target" position={Position.Left} className="w-3 h-3 !bg-white/30 border-none" />
 
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
@@ -85,7 +83,7 @@ const CustomNode = ({ data }: NodeProps) => {
         </span>
       </div>
 
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3 !bg-white/30 border-none" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 !bg-white/30 border-none" />
     </div>
   )
 }

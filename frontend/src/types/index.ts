@@ -7,7 +7,8 @@ export interface DisciplinaNaoMapeada {
 export interface HistoricoParseado {
   nome_aluno: string
   matricula: string
-  semestre_atual: number           // 1 (ímpar) ou 2 (par)
+  periodo_atual: number // número real do período
+  semestre_atual: number
   disciplinas_aprovadas: string[]  // IDs do grade.json
   nao_mapeadas: DisciplinaNaoMapeada[]
 }
@@ -22,16 +23,16 @@ export interface DisciplinaPlano {
 }
 
 export interface SemestrePlano {
-  numero: number                   // ordinal: 1, 2, 3...
-  tipo_semestre: number            // 1 (ímpar) ou 2 (par)
+  numero: number
+  tipo_semestre: number // 1 (ímpar) ou 2 (par)
   disciplinas: DisciplinaPlano[]
   total_disciplinas: number
   total_carga_horaria: number
 }
 
 export interface Plano {
-  caso: number                     // 1 ou 2
-  algoritmo: number                // 1 ou 2
+  caso: number // 1 ou 2
+  algoritmo: number // 1 ou 2
   semestres: SemestrePlano[]
   total_semestres: number
   total_disciplinas: number
@@ -54,7 +55,7 @@ export interface ArestaGrafo {
 }
 
 export interface ResultadoPlanejar {
-  planos: Plano[]                  // sempre 4: caso1/algo1, caso1/algo2, caso2/algo1, caso2/algo2
+  planos: Plano[]
   nos: NoGrafo[]
   arestas: ArestaGrafo[]
   disciplinas_pendentes: number
@@ -64,15 +65,15 @@ export interface ResultadoPlanejar {
 export type FlowStep = 'upload' | 'preview' | 'planning'
 
 export interface MapeamentoOptativa {
-  codigo_sigaa: string             // ex: "CAN0073"
-  nome_sigaa: string               // ex: "Prática de Programação para Robótica I"
-  id_grade: string | null          // ex: "OPT1" — null se o aluno optar por não mapear
+  codigo_sigaa: string
+  nome_sigaa: string
+  id_grade: string | null
 }
 
 export interface AppState {
   step: FlowStep
   historico: HistoricoParseado | null
-  mapeamentos: MapeamentoOptativa[]  // definidos na Screen2
+  mapeamentos: MapeamentoOptativa[]
   resultado: ResultadoPlanejar | null
   maxDisciplinas: number
   loading: boolean

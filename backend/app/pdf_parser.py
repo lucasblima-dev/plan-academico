@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 SITUACOES_APROVADAS = {"APR", "CUMP", "DISP", "APRN", "TRANS", "INCORP"}
 
-# Dicionário de mapeamento completo conforme BACKEND.md seção 6
 SIGAA_PARA_ID: dict[str, str] = {
     # ── 1º período ──────────────────────────────────────────────────────────
     "NCC0211": "ALGPROG",    # Algoritmos e Programação
@@ -71,11 +70,9 @@ SIGAA_PARA_ID: dict[str, str] = {
 }
 
 def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
-    """
-    Extrai o histórico escolar de um PDF do SIGAA/UERN.
-    """
     nome_aluno = ""
     matricula = ""
+    periodo_atual = 1
     semestre_atual = 1
     disciplinas_aprovadas = []
     nao_mapeadas = []
@@ -92,7 +89,6 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
         if match_nome:
             nome_aluno = match_nome.group(1).strip()
         else:
-            # Fallback para o formato antigo se necessário
             match_nome = re.search(r"Discente:\s+(.+)", primeira_pagina)
             if match_nome:
                 nome_aluno = match_nome.group(1).strip()
@@ -105,8 +101,8 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
         # Extrair Período Letivo Atual
         match_periodo = re.search(r"Período Letivo Atual:\s+(\d+)", primeira_pagina)
         if match_periodo:
-            periodo = int(match_periodo.group(1))
-            semestre_atual = 1 if periodo % 2 != 0 else 2
+            periodo_atual = int(match_periodo.group(1))
+            semestre_atual = 1 if periodo_atual % 2 != 0 else 2
 
         # Extrair componentes curriculares
         for page in pdf.pages:
@@ -184,6 +180,7 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
     return HistoricoParseado(
         nome_aluno=nome_aluno,
         matricula=matricula,
+        periodo_atual=periodo_atual,
         semestre_atual=semestre_atual,
         disciplinas_aprovadas=disciplinas_aprovadas,
         nao_mapeadas=nao_mapeadas

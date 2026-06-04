@@ -8,12 +8,12 @@ import { LayoutGrid, GitGraph, Diff, Settings2, Zap } from 'lucide-react'
 
 interface Screen3ResultsProps {
   resultado: ResultadoPlanejar
-  semestreAtual: number
+  periodoAtual: number
 }
 
 type TabType = 'plan' | 'graph' | 'compare'
 
-export function Screen3Results({ resultado, semestreAtual }: Screen3ResultsProps) {
+export function Screen3Results({ resultado, periodoAtual }: Screen3ResultsProps) {
   const [abaAtiva, setAbaAtiva] = useState<TabType>('plan')
   const [casoAtivo, setCasoAtivo] = useState<1 | 2>(1)
   const [algoAtivo, setAlgoAtivo] = useState<1 | 2>(1)
@@ -115,7 +115,7 @@ export function Screen3Results({ resultado, semestreAtual }: Screen3ResultsProps
 
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         {abaAtiva === 'plan' && planoAtivo && (
-          <PlanView plano={planoAtivo} semestreAtual={semestreAtual} />
+          <PlanView plano={planoAtivo} periodoAtual={periodoAtual} />
         )}
 
         {abaAtiva === 'graph' && (
