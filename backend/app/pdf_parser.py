@@ -83,6 +83,10 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
     with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
         primeira_pagina = pdf.pages[0].extract_text()
         
+        # Validar se é um Histórico Escolar do SIGAA
+        if "HISTÓRICO ESCOLAR" not in primeira_pagina.upper():
+            raise ValueError("O arquivo enviado não parece ser um Histórico Escolar válido do SIGAA.")
+
         # Extrair Nome do Aluno
         match_nome = re.search(r"Nome:\s+(.+?)\s+Matrícula:", primeira_pagina)
         if match_nome:
