@@ -11,6 +11,7 @@ import {
   Position,
   ReactFlowProvider,
 } from '@xyflow/react'
+
 import type { NodeProps, Edge, Node } from '@xyflow/react'
 //import dagre from 'dagre'
 import '@xyflow/react/dist/style.css'
@@ -22,34 +23,43 @@ interface GraphViewProps {
   arestas: ArestaGrafo[]
 }
 
-//const nodeWidth = 220
+const nodeWidth = 200
 //const nodeHeight = 80
 
-const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
-  const xSpacing = 350
-  const ySpacing = 120
-  const periodCounts: Record<number, number> = {}
+const calculateGridLayout = (nodes: Node[]) => {
+  const ySpacing = 180
+  const xSpacing = 240
 
-  const layoutedNodes = nodes.map((node) => {
+  const periods: Record<number, Node[]> = {}
+  nodes.forEach(node => {
     const nodeData = node.data as unknown as NoGrafo
-    const period = nodeData.periodo_recomendado || 1
-
-    if (periodCounts[period] === undefined) {
-      periodCounts[period] = 0
-    }
-
-    const x = (period - 1) * xSpacing
-    const y = periodCounts[period] * ySpacing
-
-    periodCounts[period]++
-
-    return {
-      ...node,
-      position: { x, y },
-    }
+    const p = nodeData.periodo_recomendado || 1
+    if (!periods[p]) periods[p] = []
+    periods[p].push(node)
   })
 
-  return { nodes: layoutedNodes, edges }
+  const layoutedNodes: Node[] = []
+
+  Object.keys(periods).forEach(pStr => {
+    const p = parseInt(pStr)
+    const rowNodes = periods[p]
+    const rowCount = rowNodes.length
+
+    const totalRowWidth = rowCount * nodeWidth + (rowCount - 1) * (xSpacing - nodeWidth)
+    const startX = -totalRowWidth / 2
+
+    rowNodes.forEach((node, index) => {
+      layoutedNodes.push({
+        ...node,
+        position: {
+          x: startX + index * xSpacing,
+          y: (p - 1) * ySpacing
+        }
+      })
+    })
+  })
+
+  return layoutedNodes
 }
 
 const CustomNode = ({ data }: NodeProps) => {
@@ -67,7 +77,7 @@ const CustomNode = ({ data }: NodeProps) => {
 
   return (
     <div className={`px-4 py-3 shadow-xl rounded-2xl border-2 transition-all hover:scale-105 duration-300 ${nodeStyle} min-w-[200px]`}>
-      <Handle type="target" position={Position.Left} className="w-3 h-3 !bg-white/30 border-none" />
+      <Handle type="target" position={Position.Top} className="w-3 h-3 !bg-white/30 border-none" />
 
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
@@ -83,7 +93,7 @@ const CustomNode = ({ data }: NodeProps) => {
         </span>
       </div>
 
-      <Handle type="source" position={Position.Right} className="w-3 h-3 !bg-white/30 border-none" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 !bg-white/30 border-none" />
     </div>
   )
 }
@@ -117,13 +127,13 @@ const GraphFlow = ({ nos, arestas }: GraphViewProps) => {
     })), [arestas, nos]
   )
 
-  const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(
-    () => getLayoutedElements(initialNodes, initialEdges),
-    [initialNodes, initialEdges]
+  const layoutedNodes = useMemo(
+    () => calculateGridLayout(initialNodes),
+    [initialNodes]
   )
 
   const [nodes, , onNodesChange] = useNodesState(layoutedNodes)
-  const [edges, , onEdgesChange] = useEdgesState(layoutedEdges)
+  const [edges, , onEdgesChange] = useEdgesState(initialEdges)
   const { fitView } = useReactFlow()
 
   const onLayout = useCallback(() => {
