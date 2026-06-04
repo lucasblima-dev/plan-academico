@@ -10,13 +10,15 @@ import {
   Handle,
   Position,
   ReactFlowProvider,
+  getNodesBounds,
 } from '@xyflow/react'
 
 import type { NodeProps, Edge, Node } from '@xyflow/react'
-//import dagre from 'dagre'
+import { toSvg, toJpeg } from 'html-to-image'
+import { jsPDF } from 'jspdf'
 import '@xyflow/react/dist/style.css'
 import type { NoGrafo, ArestaGrafo } from '../../types'
-import { Maximize, Layers, Info } from 'lucide-react'
+import { Maximize, Layers, Info, FileJson, FileText } from 'lucide-react'
 
 interface GraphViewProps {
   nos: NoGrafo[]
@@ -24,7 +26,6 @@ interface GraphViewProps {
 }
 
 const nodeWidth = 200
-//const nodeHeight = 80
 
 const calculateGridLayout = (nodes: Node[]) => {
   const ySpacing = 180
@@ -45,6 +46,7 @@ const calculateGridLayout = (nodes: Node[]) => {
     const rowNodes = periods[p]
     const rowCount = rowNodes.length
 
+    // Calcular largura total da linha para centralizar
     const totalRowWidth = rowCount * nodeWidth + (rowCount - 1) * (xSpacing - nodeWidth)
     const startX = -totalRowWidth / 2
 
@@ -134,14 +136,88 @@ const GraphFlow = ({ nos, arestas }: GraphViewProps) => {
 
   const [nodes, , onNodesChange] = useNodesState(layoutedNodes)
   const [edges, , onEdgesChange] = useEdgesState(initialEdges)
-  const { fitView } = useReactFlow()
+  const { fitView, getNodes } = useReactFlow()
 
   const onLayout = useCallback(() => {
     fitView({ duration: 800, padding: 0.2 })
   }, [fitView])
 
+  const handleDownloadSVG = async () => {
+    const nodes = getNodes()
+    if (nodes.length === 0) return
+
+    const bounds = getNodesBounds(nodes)
+    const viewport = document.querySelector('.react-flow__viewport') as HTMLElement
+
+    try {
+      const dataUrl = await toSvg(viewport, {
+        backgroundColor: 'transparent',
+        width: bounds.width + 100,
+        height: bounds.height + 100,
+        style: {
+          width: `${bounds.width + 100}px`,
+          height: `${bounds.height + 100}px`,
+          transform: `translate(${-bounds.x + 50}px, ${-bounds.y + 50}px)`,
+        },
+        filter: (node) => {
+          if (node.classList?.contains('react-flow__controls')) return false
+          if (node.classList?.contains('react-flow__panel')) return false
+          return true
+        }
+      })
+
+      const link = document.createElement('a')
+      link.download = 'grade-curricular.svg'
+      link.href = dataUrl
+      link.click()
+    } catch (err) {
+      console.error('Erro ao baixar SVG:', err)
+    }
+  }
+
+  const handleDownloadPDF = async () => {
+    const nodes = getNodes()
+    if (nodes.length === 0) return
+
+    const bounds = getNodesBounds(nodes)
+    const viewport = document.querySelector('.react-flow__viewport') as HTMLElement
+
+    try {
+      // Usar JPEG com qualidade 0.9 e ratio 2 (Equilíbrio perfeito entre peso e nitidez)
+      const dataUrl = await toJpeg(viewport, {
+        backgroundColor: '#ffffff',
+        pixelRatio: 2, 
+        quality: 0.9,
+        width: bounds.width + 100,
+        height: bounds.height + 100,
+        style: {
+          width: `${bounds.width + 100}px`,
+          height: `${bounds.height + 100}px`,
+          transform: `translate(${-bounds.x + 50}px, ${-bounds.y + 50}px)`,
+        },
+        filter: (node) => {
+          if (node.classList?.contains('react-flow__controls')) return false
+          if (node.classList?.contains('react-flow__panel')) return false
+          return true
+        }
+      })
+
+      const pdf = new jsPDF({
+        orientation: bounds.width > bounds.height ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [bounds.width + 100, bounds.height + 100],
+        compress: true 
+      })
+
+      pdf.addImage(dataUrl, 'JPEG', 0, 0, bounds.width + 100, bounds.height + 100, undefined, 'FAST')
+      pdf.save('grade-curricular.pdf')
+    } catch (err) {
+      console.error('Erro ao baixar PDF:', err)
+    }
+  }
+
   return (
-    <div className="w-full h-[700px] bg-surface-base border-2 border-surface-subtle rounded-[40px] overflow-hidden relative shadow-2xl animate-in zoom-in-95 duration-700">
+    <div className="w-full h-175 bg-surface-base border-2 border-surface-subtle rounded-[40px] overflow-hidden relative shadow-2xl animate-in zoom-in-95 duration-700">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -151,6 +227,7 @@ const GraphFlow = ({ nos, arestas }: GraphViewProps) => {
         fitView
         minZoom={0.1}
         maxZoom={1.5}
+        proOptions={{ hideAttribution: true }}
         defaultEdgeOptions={{
           style: { strokeWidth: 3, stroke: '#94a3b8' },
         }}
@@ -158,7 +235,7 @@ const GraphFlow = ({ nos, arestas }: GraphViewProps) => {
         <Background color="var(--surface-subtle)" gap={30} size={2} />
         <Controls showInteractive={false} className="bg-white dark:bg-slate-800 border-surface-subtle shadow-xl rounded-2xl overflow-hidden" />
 
-        <Panel position="top-right" className="m-6">
+        <Panel position="top-right" className="m-6 flex flex-col gap-4">
           <div className="flex flex-col gap-4 bg-white/80 dark:bg-slate-900/80 p-6 rounded-[32px] border border-surface-subtle shadow-2xl backdrop-blur-xl max-w-xs">
             <div className="flex items-center gap-2 mb-2">
               <Layers size={18} className="text-accent" />
@@ -185,6 +262,28 @@ const GraphFlow = ({ nos, arestas }: GraphViewProps) => {
             <div className="flex items-start gap-2 text-[10px] text-slate-400 font-bold leading-tight">
               <Info size={12} className="shrink-0 mt-0.5" />
               <span>Use o scroll para zoom e arraste para navegar no DAG curricular.</span>
+            </div>
+          </div>
+
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-[24px] border border-surface-subtle shadow-2xl backdrop-blur-xl flex flex-col gap-2">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-1">Exportar</p>
+            <div className="flex gap-2">
+              <button
+                onClick={handleDownloadSVG}
+                className="flex-1 flex items-center justify-center gap-2 bg-surface-subtle hover:bg-surface-card text-slate-600 dark:text-slate-200 py-2.5 px-4 rounded-xl transition-all font-bold text-[10px] uppercase border border-surface-subtle"
+                title="Baixar em formato vetorial SVG"
+              >
+                <FileJson size={14} className="text-orange-500" />
+                SVG
+              </button>
+              <button
+                onClick={handleDownloadPDF}
+                className="flex-1 flex items-center justify-center gap-2 bg-surface-subtle hover:bg-surface-card text-slate-600 dark:text-slate-200 py-2.5 px-4 rounded-xl transition-all font-bold text-[10px] uppercase border border-surface-subtle"
+                title="Baixar em formato PDF"
+              >
+                <FileText size={14} className="text-red-500" />
+                PDF
+              </button>
             </div>
           </div>
         </Panel>
