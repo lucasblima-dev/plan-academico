@@ -1,8 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
-# ── Entrada ──────────────────────────────────────────────────────────────────
-
 class DisciplinaNaoMapeada(BaseModel):
     codigo_sigaa: str
     nome_sigaa: str
@@ -11,8 +9,10 @@ class DisciplinaNaoMapeada(BaseModel):
 class HistoricoParseado(BaseModel):
     nome_aluno: str
     matricula: str
+    periodo_atual: int           # (número real do período)
     semestre_atual: int          # 1 (ímpar) ou 2 (par)
     disciplinas_aprovadas: List[str]  # lista de IDs do grade.json
+    disciplinas_cursando: List[str] = [] # lista de IDs do grade.json (situação MATR)
     nao_mapeadas: List[DisciplinaNaoMapeada]
 
 class PlanejamentoRequest(BaseModel):
@@ -20,8 +20,6 @@ class PlanejamentoRequest(BaseModel):
     max_disciplinas: int = Field(..., ge=5, le=7)
     aprovadas_manualmente: List[str] = Field(default_factory=list) 
     # Recebe os IDs (ex: "OPT1", "UCE6") que o aluno conciliou na Tela 2
-
-# ── Saída do planejamento ────────────────────────────────────────────────────
 
 class DisciplinaPlano(BaseModel):
     id: str
@@ -39,8 +37,8 @@ class SemestrePlano(BaseModel):
     total_carga_horaria: int
 
 class Plano(BaseModel):
-    caso: int                    # 1 ou 2
-    algoritmo: int               # 1 ou 2
+    caso: int
+    algoritmo: int
     semestres: List[SemestrePlano]
     total_semestres: int
     total_disciplinas: int
@@ -52,6 +50,7 @@ class NoGrafo(BaseModel):
     periodo_recomendado: int
     semestre_oferta: int
     aprovada: bool
+    cursando: bool = False       # aluno está matriculado agora
     disponivel: bool             # sem pré-requisitos pendentes
     caminho_critico: bool        # está no caminho crítico do DAG
 

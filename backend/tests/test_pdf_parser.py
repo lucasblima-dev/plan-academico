@@ -20,8 +20,9 @@ def test_parse_historico_lucas():
 
     # Verificar Semestre Atual (Período Ímpar == 1)
     assert resultado.semestre_atual == 1
+    assert resultado.periodo_atual == 5
 
-    # Verificar Disciplinas Aprovadas (Total 29 conforme DATA.md)
+    # Verificar Disciplinas Aprovadas
     # IDs esperados da lista em DATA.md
     ids_esperados = {
         "ALGPROG", "MATFUND", "FILOS", "FISCOMP", "LOGMAT", "TECS", "PRODTXT1",
@@ -30,7 +31,6 @@ def test_parse_historico_lucas():
         "REDES", "UCE2", "CALCNUM", "APS", "BD", "POO", "SO", "UCE3"
     }
     
-    # Converter para set para comparação (ordem não importa)
     set_aprovadas = set(resultado.disciplinas_aprovadas)
     
     assert len(set_aprovadas) == 29

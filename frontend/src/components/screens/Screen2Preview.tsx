@@ -85,7 +85,7 @@ export function Screen2Preview({
           <div>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Período Atual</p>
             <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
-              {isImpar ? '5º Período (Ímpar)' : '6º Período (Par)'}
+              {historico.periodo_atual}º Período ({isImpar ? 'Ímpar' : 'Par'})
             </p>
           </div>
         </div>
@@ -224,7 +224,7 @@ export function Screen2Preview({
         >
           {loading ? 'Gerando Plano...' : (
             <>
-              Confirmar e Gerar Planejamento
+              Gerar Planejamento Otimizado
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </>
           )}

@@ -1,5 +1,5 @@
 import { useTheme } from './ThemeProvider'
-import { Moon, Sun, RefreshCw, Box } from 'lucide-react'
+import { Moon, Sun, RefreshCw, Zap } from 'lucide-react'
 
 interface HeaderProps {
   showReset: boolean
@@ -13,14 +13,14 @@ export function Header({ showReset, onReset }: HeaderProps) {
     <header className="fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between px-6 bg-slate-900 dark:bg-slate-950 border-b border-white/10 transition-colors duration-200">
       <div className="flex items-center gap-3">
         <div className="text-white">
-          <Box size={24} strokeWidth={2.5} />
+          <Zap size={24} className="text-accent fill-accent/20" />
         </div>
         <div>
-          <h1 className="text-white font-bold text-lg leading-tight tracking-tight">
-            Planejador Acadêmico
+          <h1 className="text-white font-black text-xl tracking-tighter leading-tight">
+            PLAN<span className="text-accent">ACADÊMICO</span>
           </h1>
-          <p className="text-slate-400 text-xs font-medium">
-            Teoria dos Grafos · UERN 2026.1
+          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+            UERN · Teoria dos Grafos
           </p>
         </div>
       </div>

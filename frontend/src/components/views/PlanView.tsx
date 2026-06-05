@@ -5,10 +5,10 @@ import { Clock, BookOpen, Award, ChevronDown } from 'lucide-react'
 
 interface PlanViewProps {
   plano: Plano
-  semestreAtual: number
+  periodoAtual: number
 }
 
-export const PlanView = React.memo(({ plano }: PlanViewProps) => {
+export const PlanView = React.memo(({ plano, periodoAtual }: PlanViewProps) => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="bg-slate-900 text-white rounded-3xl px-8 py-8 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-8 border border-white/5">
@@ -55,6 +55,7 @@ export const PlanView = React.memo(({ plano }: PlanViewProps) => {
           <SemestreAccordion 
             key={semestre.numero} 
             semestre={semestre} 
+            numeroReal={periodoAtual + index}
             isFirst={index === 0}
             isAtual={semestre.numero === 1}
           />
@@ -70,12 +71,24 @@ const CalendarIcon = () => (
 
 interface SemestreAccordionProps {
   semestre: SemestrePlano
+  numeroReal: number
   isFirst: boolean
   isAtual: boolean
 }
 
-function SemestreAccordion({ semestre, isFirst, isAtual }: SemestreAccordionProps) {
+function SemestreAccordion({ semestre, numeroReal, isFirst, isAtual }: SemestreAccordionProps) {
   const [isOpen, setIsOpen] = useState(isFirst)
+
+  const getOrdinalPeriod = (num: number) => {
+    const ordinals: Record<number, string> = {
+      1: 'Primeiro', 2: 'Segundo', 3: 'Terceiro', 4: 'Quarto',
+      5: 'Quinto', 6: 'Sexto', 7: 'Sétimo', 8: 'Oitavo',
+      9: 'Nono', 10: 'Décimo', 11: 'Décimo Primeiro', 12: 'Décimo Segundo'
+    }
+    return ordinals[num] || `${num}º`
+  }
+
+  const labelPeriodo = `${getOrdinalPeriod(numeroReal)} Período`
 
   return (
     <div className={clsx(
@@ -97,21 +110,16 @@ function SemestreAccordion({ semestre, isFirst, isAtual }: SemestreAccordionProp
             "w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg",
             isOpen ? "bg-accent text-white" : "bg-surface-subtle text-slate-400"
           )}>
-            {semestre.numero}
+            {numeroReal}
           </div>
           <div className="text-left">
             <div className="flex items-center gap-2">
               <span className="text-lg font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-                {semestre.tipo_semestre === 1 ? 'Semestre Ímpar' : 'Semestre Par'}
+                {labelPeriodo} {isAtual && <span className="text-slate-400 font-medium ml-1">(Semestre Atual)</span>}
               </span>
-              {isAtual && (
-                <span className="text-[10px] font-black bg-accent/10 text-accent px-2 py-0.5 rounded-lg uppercase tracking-wider">
-                  Sugestão Atual
-                </span>
-              )}
             </div>
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-              Matriz {semestre.tipo_semestre === 1 ? '1, 3, 5, 7' : '2, 4, 6, 8'}
+              Foco em disciplinas de semestre {semestre.tipo_semestre === 1 ? 'Ímpar' : 'Par'}
             </p>
           </div>
         </div>
@@ -152,7 +160,10 @@ function SemestreAccordion({ semestre, isFirst, isAtual }: SemestreAccordionProp
                     {disc.id}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-none mb-2">
+                    <p 
+                      className="text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-none mb-2 cursor-help"
+                      title={disc.id}
+                    >
                       {disc.nome}
                     </p>
                     <div className="flex items-center gap-2">

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { HistoricoParseado, ResultadoPlanejar, MapeamentoOptativa } from '../types';
+import type { HistoricoParseado, ResultadoPlanejar, MapeamentoOptativa, GradeCurricular } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -33,6 +33,11 @@ export const planejar = async (
     max_disciplinas: maxDisciplinas,
     aprovadas_manualmente
   });
+  return response.data;
+};
+
+export const getGrade = async (): Promise<GradeCurricular> => {
+  const response = await api.get<GradeCurricular>('/api/grade');
   return response.data;
 };
 

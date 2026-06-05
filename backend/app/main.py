@@ -115,7 +115,13 @@ async def planejar(request: PlanejamentoRequest):
         cpm = calcular_cpm(G)
         disponiveis = [n for n in G.nodes() if G.in_degree(n) == 0]
         
-        nos, arestas = grafo_para_nos_arestas(G_completo, aprovadas, cpm, disponiveis)
+        nos, arestas = grafo_para_nos_arestas(
+            G_completo, 
+            aprovadas, 
+            cpm, 
+            disponiveis, 
+            request.historico.disciplinas_cursando
+        )
         
         return ResultadoPlanejar(
             planos=planos,

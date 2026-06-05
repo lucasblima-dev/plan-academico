@@ -36,7 +36,8 @@ def grafo_para_nos_arestas(
     G_completo: nx.DiGraph,
     disciplinas_aprovadas: list[str],
     cpm: dict[str, int],
-    disciplinas_disponiveis: list[str]
+    disciplinas_disponiveis: list[str],
+    disciplinas_cursando: list[str] = []
 ) -> tuple[list, list]:
     """
     Serializa o grafo completo para o schema NoGrafo/ArestaGrafo.
@@ -54,12 +55,18 @@ def grafo_para_nos_arestas(
             periodo_recomendado=attrs['periodo_recomendado'],
             semestre_oferta=attrs['semestre_oferta'],
             aprovada=node in disciplinas_aprovadas,
+            cursando=node in disciplinas_cursando,
             disponivel=node in disciplinas_disponiveis,
             caminho_critico=(cpm.get(node, 0) == max_cpm and node not in disciplinas_aprovadas)
         ))
         
     arestas = []
-    for u, v in G_completo.edges():
-        arestas.append(ArestaGrafo(origem=u, destino=v))
+    # Construir arestas dinamicamente a partir dos pré-requisitos reais
+    for node, attrs in G_completo.nodes(data=True):
+        # Acessar a grade bruta para pegar os pré-requisitos originais
+        # Nota: G_completo já possui as arestas se foi montado corretamente, 
+        # mas vamos garantir a serialização correta aqui.
+        for u, v in G_completo.in_edges(node):
+            arestas.append(ArestaGrafo(origem=u, destino=v))
         
     return nos, arestas
