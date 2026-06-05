@@ -2,12 +2,6 @@ import logging
 import networkx as nx
 
 def validar_grade_json(grade: dict) -> list[str]:
-    """
-    Valida o grade.json verificando:
-    - Todos os IDs em pre_requisitos existem como disciplinas na lista.
-    - Nenhum campo obrigatório está faltando.
-    Retorna lista de erros encontrados (vazia se válido).
-    """
     erros = []
     
     if "disciplinas" not in grade:
@@ -39,13 +33,9 @@ def grafo_para_nos_arestas(
     disciplinas_disponiveis: list[str],
     disciplinas_cursando: list[str] = []
 ) -> tuple[list, list]:
-    """
-    Serializa o grafo completo para o schema NoGrafo/ArestaGrafo.
-    """
     from .models import NoGrafo, ArestaGrafo
     
     nos = []
-    # Determinar maior CPM para destacar caminho crítico (simplificado: maior CPM do grafo)
     max_cpm = max(cpm.values()) if cpm else 0
     
     for node, attrs in G_completo.nodes(data=True):
@@ -57,15 +47,14 @@ def grafo_para_nos_arestas(
             aprovada=node in disciplinas_aprovadas,
             cursando=node in disciplinas_cursando,
             disponivel=node in disciplinas_disponiveis,
-            caminho_critico=(cpm.get(node, 0) == max_cpm and node not in disciplinas_aprovadas)
+            caminho_critico=(cpm.get(node, 0) == max_cpm and node not in disciplinas_aprovadas),
+            carga_horaria=attrs.get('carga_horaria', 0),
+            creditos=attrs.get('creditos', 0)
         ))
         
     arestas = []
     # Construir arestas dinamicamente a partir dos pré-requisitos reais
     for node, attrs in G_completo.nodes(data=True):
-        # Acessar a grade bruta para pegar os pré-requisitos originais
-        # Nota: G_completo já possui as arestas se foi montado corretamente, 
-        # mas vamos garantir a serialização correta aqui.
         for u, v in G_completo.in_edges(node):
             arestas.append(ArestaGrafo(origem=u, destino=v))
         

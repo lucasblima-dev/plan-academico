@@ -1,8 +1,8 @@
 import { usePlanner } from './hooks/usePlanner'
 import { Header } from './components/layout/Header'
-import { Screen1Upload } from './components/screens/Screen1Upload'
-import { Screen2Preview } from './components/screens/Screen2Preview'
-import { Screen3Results } from './components/screens/Screen3Results'
+import { Screen1Upload } from './pages/Screen1Upload'
+import { Screen2Preview } from './pages/Screen2Preview'
+import { Screen3Results } from './pages/Screen3Results'
 
 export default function App() {
   const planner = usePlanner()

@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react'
 import { clsx } from 'clsx'
 import { UploadCloud, Lock, Zap, AlertCircle, Loader2, BookOpen, X } from 'lucide-react'
-import { getGrade } from '../../services/api'
-import { GraphView } from '../views/GraphView'
-import type { NoGrafo, ArestaGrafo, DisciplinaGrade } from '../../types'
+import { getGrade } from '../services/api'
+import { GraphView } from '../components/GraphView'
+import type { NoGrafo, ArestaGrafo, DisciplinaGrade } from '../types'
 
 interface Screen1UploadProps {
   onUpload: (file: File) => void
@@ -56,7 +56,9 @@ export function Screen1Upload({ onUpload, loading, error }: Screen1UploadProps) 
         aprovada: false,
         cursando: false,
         disponivel: true,
-        caminho_critico: false
+        caminho_critico: false,
+        carga_horaria: d.carga_horaria,
+        creditos: d.creditos
       }))
 
       const arestas: ArestaGrafo[] = []

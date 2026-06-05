@@ -49,6 +49,8 @@ export interface NoGrafo {
   cursando: boolean                // aluno está matriculado agora
   disponivel: boolean              // sem pré-requisitos pendentes
   caminho_critico: boolean
+  carga_horaria: number
+  creditos: number
 }
 
 export interface ArestaGrafo {

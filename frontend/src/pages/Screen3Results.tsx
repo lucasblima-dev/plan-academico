@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { clsx } from 'clsx'
-import type { ResultadoPlanejar } from '../../types'
-import { PlanView } from '../views/PlanView'
-import { GraphView } from '../views/GraphView'
-import { CompareView } from '../views/CompareView'
+import type { ResultadoPlanejar, Plano } from '../types'
+import { PlanView } from '../components/PlanView'
+import { GraphView } from '../components/GraphView'
+import { CompareView } from '../components/CompareView'
 import { LayoutGrid, GitGraph, Diff, Settings2, Zap } from 'lucide-react'
 
 interface Screen3ResultsProps {
@@ -19,7 +19,7 @@ export function Screen3Results({ resultado, periodoAtual }: Screen3ResultsProps)
   const [algoAtivo, setAlgoAtivo] = useState<1 | 2>(1)
 
   const planoAtivo = resultado.planos.find(
-    p => p.caso === casoAtivo && p.algoritmo === algoAtivo
+    (p: Plano) => p.caso === casoAtivo && p.algoritmo === algoAtivo
   )
 
   return (
@@ -119,7 +119,7 @@ export function Screen3Results({ resultado, periodoAtual }: Screen3ResultsProps)
         )}
 
         {abaAtiva === 'graph' && (
-          <GraphView nos={resultado.nos} arestas={resultado.arestas} />
+          <GraphView nos={resultado.nos} arestas={resultado.arestas} isPlanejamento={true} />
         )}
 
         {abaAtiva === 'compare' && (
