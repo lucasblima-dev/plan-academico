@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { clsx } from 'clsx'
 import { ChevronLeft, AlertTriangle, Check, Trash2, ArrowRight, User, Calendar } from 'lucide-react'
-import type { HistoricoParseado, MapeamentoOptativa } from '../../types'
+import type { HistoricoParseado, MapeamentoOptativa, DisciplinaNaoMapeada } from '../types'
 
 interface Screen2PreviewProps {
   historico: HistoricoParseado
@@ -104,7 +104,7 @@ export function Screen2Preview({
             </p>
 
             <div className="space-y-3">
-              {historico.nao_mapeadas.map((disc) => (
+              {historico.nao_mapeadas.map((disc: DisciplinaNaoMapeada) => (
                 <div key={disc.codigo_sigaa} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-amber-100 dark:border-amber-900/30">
                   <div className="flex flex-col">
                     <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
@@ -154,7 +154,7 @@ export function Screen2Preview({
             ) : (
               <table className="w-full text-left border-collapse">
                 <tbody className="divide-y divide-surface-subtle">
-                  {historico.disciplinas_aprovadas.map((id, index) => (
+                  {historico.disciplinas_aprovadas.map((id: string, index: number) => (
                     <tr 
                       key={id} 
                       className={clsx(

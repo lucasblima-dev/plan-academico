@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { clsx } from 'clsx'
-import type { Plano, SemestrePlano } from '../../types'
+import type { Plano, SemestrePlano, DisciplinaPlano } from '../types'
 import { Clock, BookOpen, Award, ChevronDown } from 'lucide-react'
 
 interface PlanViewProps {
@@ -51,7 +51,7 @@ export const PlanView = React.memo(({ plano, periodoAtual }: PlanViewProps) => {
       </div>
 
       <div className="grid gap-6">
-        {plano.semestres.map((semestre, index) => (
+        {plano.semestres.map((semestre: SemestrePlano, index: number) => (
           <SemestreAccordion 
             key={semestre.numero} 
             semestre={semestre} 
@@ -147,7 +147,7 @@ function SemestreAccordion({ semestre, numeroReal, isFirst, isAtual }: SemestreA
       {isOpen && (
         <div className="px-4 pb-4 animate-in fade-in zoom-in-95 duration-200">
           <div className="bg-surface-base/50 rounded-2xl overflow-hidden border border-surface-subtle divide-y divide-surface-subtle">
-            {semestre.disciplinas.map((disc, idx) => (
+            {semestre.disciplinas.map((disc: DisciplinaPlano, idx: number) => (
               <div 
                 key={disc.id} 
                 className={clsx(

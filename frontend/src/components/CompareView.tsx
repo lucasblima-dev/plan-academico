@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { clsx } from 'clsx'
-import type { Plano } from '../../types'
+import type { Plano, SemestrePlano, DisciplinaPlano } from '../types'
 import { CheckCircle2, Info, ArrowRightLeft, TrendingUp } from 'lucide-react'
 
 interface CompareViewProps {
@@ -121,11 +121,11 @@ export function CompareView({ planos, casoAtivo }: CompareViewProps) {
                 const p1 = planos.find(p => p.caso === casoAtivo && p.algoritmo === 1)
                 const p2 = planos.find(p => p.caso === casoAtivo && p.algoritmo === 2)
                 
-                const s1 = p1?.semestres.find(s => s.numero === semNum)
-                const s2 = p2?.semestres.find(s => s.numero === semNum)
+                const s1 = p1?.semestres.find((s: SemestrePlano) => s.numero === semNum)
+                const s2 = p2?.semestres.find((s: SemestrePlano) => s.numero === semNum)
 
-                const names1 = s1?.disciplinas.map(d => d.nome).join(', ') || '—'
-                const names2 = s2?.disciplinas.map(d => d.nome).join(', ') || '—'
+                const names1 = s1?.disciplinas.map((d: DisciplinaPlano) => d.nome).join(', ') || '—'
+                const names2 = s2?.disciplinas.map((d: DisciplinaPlano) => d.nome).join(', ') || '—'
                 const divergem = names1 !== names2 && names1 !== '—' && names2 !== '—'
 
                 return (

@@ -13,11 +13,11 @@ import {
   getNodesBounds,
 } from '@xyflow/react'
 
-import type { NodeProps, Edge, Node } from '@xyflow/react'
+import type { NodeProps, Node } from '@xyflow/react'
 import { toSvg, toJpeg } from 'html-to-image'
 import { jsPDF } from 'jspdf'
 import '@xyflow/react/dist/style.css'
-import type { NoGrafo, ArestaGrafo } from '../../types'
+import type { NoGrafo, ArestaGrafo } from '../types'
 import { Maximize, Layers, Info, FileJson, FileText } from 'lucide-react'
 import DetourEdge from './DetourEdge'
 
@@ -28,52 +28,48 @@ interface GraphViewProps {
   exibirLegenda?: boolean
 }
 
+const COLUMN_MAP: Record<string, number> = {
+  // Colunas (eixo X) para ficar similar a Grade
+  'TECS': 0, 'UCE1': 0, 'UCE2': 0, 'UCE3': 0, 'UCE4': 0, 'UCE5': 0, 'UCE6': 0,
+
+  'FILOS': 1, 'CIRCDIG': 1, 'ARQUCOMP': 1, 'SO': 1, 'REDES': 1, 'SISDIST': 1, 'PROGPAR': 1,
+
+  'FISCOMP': 2, 'GEOANA': 2, 'ALGLIN': 2, 'TRANSDAT': 2, 'IA': 2, 'PRODCIENT': 2, 'TGAEMP': 2,
+
+  'MATFUND': 3, 'CALC1': 3, 'ENGSW': 3, 'APS': 3, 'TEOGRAF': 3, 'COMPGRAF': 3, 'PTCC': 3, 'TCC': 3,
+
+  'ALGPROG': 4, 'TECPROG': 4, 'ESTDADOS': 4, 'POO': 4, 'TEOCOMP': 4, 'COMPALG': 4, 'VISCOMP': 4,
+
+  'LOGMAT': 5, 'PARAD': 5, 'METCIENT': 5, 'BD': 5, 'OPT1': 5, 'OPT3': 5, 'COMP': 5, 'OPT6': 5,
+
+  'PRODTXT1': 6, 'INGLES': 6, 'PROBEST': 6, 'CALCNUM': 6, 'OPT2': 6, 'OPT4': 6, 'OPT5': 6
+};
+
 const calculateGridLayout = (nodes: Node[]) => {
-  const ySpacing = 220
-  const xSpacing = 240
+  const ySpacing = 240;
+  const xSpacing = 240;
 
-  // Agrupar nós por período (linha)
-  const rows: Record<number, Node[]> = {}
-  nodes.forEach(node => {
-    const nodeData = node.data as unknown as NoGrafo
-    const row = nodeData.periodo_recomendado || 1
-    if (!rows[row]) rows[row] = []
-    rows[row].push(node)
-  })
+  return nodes.map(node => {
+    const nodeData = node.data as unknown as NoGrafo;
+    const row = (nodeData.periodo_recomendado || 1) - 1;
 
-  const layoutedNodes: Node[] = []
+    const col = COLUMN_MAP[node.id] !== undefined ? COLUMN_MAP[node.id] : 3;
 
-  Object.keys(rows).forEach(rowStr => {
-    const row = parseInt(rowStr)
-    const rowNodes = rows[row]
-
-    // Ordenar nós da linha baseando-se estritamente na ordem original
-    const nodesInRow = [...rowNodes].sort((a, b) => {
-      const indexA = nodes.findIndex(n => n.id === a.id)
-      const indexB = nodes.findIndex(n => n.id === b.id)
-      return indexA - indexB
-    })
-
-    const rowCount = nodesInRow.length
-    const totalRowWidth = rowCount * xSpacing
-    const startX = -totalRowWidth / 2 + (xSpacing / 2)
-
-    nodesInRow.forEach((node, index) => {
-      layoutedNodes.push({
-        ...node,
-        position: {
-          x: startX + index * xSpacing,
-          y: (row - 1) * ySpacing
-        }
-      })
-    })
-  })
-
-  return layoutedNodes
-}
+    return {
+      ...node,
+      position: {
+        x: col * xSpacing,
+        y: row * ySpacing
+      }
+    };
+  });
+};
 
 function CustomNode({ data }: NodeProps) {
-  const nodeData = data as unknown as NoGrafo
+  const nodeData = data as unknown as NoGrafo & {
+    topTargets?: string[];
+    bottomSources?: string[];
+  }
 
   let nodeStyle = 'bg-slate-300 dark:bg-slate-700 border-slate-400 dark:border-slate-600 text-slate-800 dark:text-slate-200'
 
@@ -97,26 +93,62 @@ function CustomNode({ data }: NodeProps) {
 
   return (
     <div
-      className={`px-3 py-4 shadow-xl rounded-2xl border-2 transition-all hover:scale-105 duration-300 ${nodeStyle} w-44 flex flex-col items-center justify-center`}
+      className={`px-3 py-4 shadow-xl rounded-2xl border-2 transition-all hover:scale-105 duration-300 ${nodeStyle} w-44 flex flex-col items-center justify-center relative`}
       title={tooltip}
     >
-      <Handle type="target" position={Position.Top} className="w-3 h-3 !bg-white/30 border-none" />
+      {(nodeData.topTargets || []).map((id: string, index: number) => {
+        const total = nodeData.topTargets?.length || 0;
+        return (
+          <Handle
+            key={id}
+            id={id}
+            type="target"
+            position={Position.Top}
+            style={{
+              left: `${total > 1 ? ((index + 1) * 100) / (total + 1) : 50}%`,
+              background: 'transparent',
+              border: 'none',
+              width: '1px',
+              height: '1px',
+            }}
+            className="opacity-0! border-none"
+          />
+        );
+      })}
 
       <div className="flex flex-col gap-2 w-full">
         <div className="flex items-center justify-between w-full">
           <span className="text-[9px] font-black opacity-70 uppercase tracking-widest">
-            {nodeData.id}
+            {nodeData.carga_horaria}h | {nodeData.creditos} CR
           </span>
           <span className="text-[9px] font-black bg-black/10 px-1.5 py-0.5 rounded uppercase">
             P{nodeData.periodo_recomendado}
           </span>
         </div>
-        <span className="text-[11px] font-extrabold leading-tight whitespace-normal break-words text-center">
+        <span className="text-[11px] font-extrabold leading-tight whitespace-normal wrap-break-word text-center">
           {nodeData.nome}
         </span>
       </div>
 
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3 !bg-white/30 border-none" />
+      {(nodeData.bottomSources || []).map((id: string, index: number) => {
+        const total = nodeData.bottomSources?.length || 0;
+        return (
+          <Handle
+            key={id}
+            id={id}
+            type="source"
+            position={Position.Bottom}
+            style={{
+              left: `${total > 1 ? ((index + 1) * 100) / (total + 1) : 50}%`,
+              background: 'transparent',
+              border: 'none',
+              width: '1px',
+              height: '1px',
+            }}
+            className="opacity-0! border-none"
+          />
+        );
+      })}
     </div>
   )
 }
@@ -141,29 +173,91 @@ const edgeTypes = {
   detour: DetourEdge,
 }
 
-const GraphFlow = ({ nos, arestas, exibirLegenda = true }: GraphViewProps) => {
+const GraphFlow = ({ nos, arestas, exibirLegenda = true, isPlanejamento = false }: GraphViewProps) => {
+  const { handleMap, mappedEdges } = useMemo(() => {
+    const handleMap: Record<string, {
+      topTargets: string[];
+      bottomSources: string[];
+    }> = {};
+
+    nos.forEach(n => {
+      handleMap[n.id] = {
+        topTargets: [],
+        bottomSources: [],
+      };
+    });
+
+    const mapped = arestas.map(a => {
+      const srcInfo = handleMap[a.origem];
+      const destInfo = handleMap[a.destino];
+
+      let sourceHandle = '';
+      let targetHandle = '';
+
+      if (srcInfo) {
+        const idx = srcInfo.bottomSources.length;
+        sourceHandle = `${a.origem}-bs-${idx}`;
+        srcInfo.bottomSources.push(sourceHandle);
+      }
+
+      if (destInfo) {
+        const idx = destInfo.topTargets.length;
+        targetHandle = `${a.destino}-tt-${idx}`;
+        destInfo.topTargets.push(targetHandle);
+      }
+
+      const srcNode = nos.find(n => n.id === a.origem);
+      const period = srcNode?.periodo_recomendado || 1;
+      const isCritical = !!(nos.find(n => n.id === a.destino)?.caminho_critico && nos.find(n => n.id === a.origem)?.caminho_critico);
+
+      // Cores para poder identificar arestas
+      const colors: Record<number, string> = {
+        1: '#64748b',
+        2: '#dc2626',
+        3: '#16a34a',
+        4: '#d97706',
+        5: '#0d9488',
+        6: '#7c3aed',
+        7: '#db2777',
+        8: '#4b5563',
+      };
+
+      const strokeColor = isCritical
+        ? '#f97316'
+        : isPlanejamento
+          ? '#94a3b8'
+          : (colors[period] || '#94a3b8');
+
+      return {
+        id: `e-${a.origem}-${a.destino}`,
+        source: a.origem,
+        target: a.destino,
+        sourceHandle,
+        targetHandle,
+        type: 'detour',
+        animated: isCritical,
+        style: {
+          stroke: strokeColor,
+          strokeWidth: isCritical ? 3 : 2,
+          opacity: isCritical ? 0.95 : 0.65
+        },
+      };
+    });
+
+    return { handleMap, mappedEdges: mapped };
+  }, [nos, arestas, isPlanejamento]);
+
   const initialNodes: Node[] = useMemo(() =>
     nos.map(n => ({
       id: n.id,
       type: 'custom',
-      data: n as unknown as Record<string, unknown>,
+      data: {
+        ...n,
+        topTargets: handleMap[n.id]?.topTargets || [],
+        bottomSources: handleMap[n.id]?.bottomSources || [],
+      } as unknown as Record<string, unknown>,
       position: { x: 0, y: 0 },
-    })), [nos]
-  )
-
-  const initialEdges: Edge[] = useMemo(() =>
-    arestas.map(a => ({
-      id: `e-${a.origem}-${a.destino}`,
-      source: a.origem,
-      target: a.destino,
-      type: 'detour',
-      animated: !!(nos.find(n => n.id === a.destino)?.caminho_critico && nos.find(n => n.id === a.origem)?.caminho_critico),
-      style: {
-        stroke: nos.find(n => n.id === a.destino)?.caminho_critico && nos.find(n => n.id === a.origem)?.caminho_critico ? '#f97316' : '#94a3b8',
-        strokeWidth: 2,
-        opacity: 0.6
-      },
-    })), [arestas, nos]
+    })), [nos, handleMap]
   )
 
   const layoutedNodes = useMemo(
@@ -172,14 +266,13 @@ const GraphFlow = ({ nos, arestas, exibirLegenda = true }: GraphViewProps) => {
   )
 
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(mappedEdges)
   const { fitView, getNodes } = useReactFlow()
 
-  // Sincronizar estado interno com as props quando elas mudarem
   useEffect(() => {
     setNodes(layoutedNodes)
-    setEdges(initialEdges)
-  }, [layoutedNodes, initialEdges, setNodes, setEdges])
+    setEdges(mappedEdges)
+  }, [layoutedNodes, mappedEdges, setNodes, setEdges])
 
   const onLayout = useCallback(() => {
     fitView({ duration: 800, padding: 0.2 })
@@ -280,7 +373,7 @@ const GraphFlow = ({ nos, arestas, exibirLegenda = true }: GraphViewProps) => {
         <Controls showInteractive={false} className="bg-white dark:bg-slate-800 border-surface-subtle shadow-xl rounded-2xl overflow-hidden" />
 
         <Panel position="top-right" className="m-6 flex flex-col gap-4 no-export-buttons">
-          <div className="flex flex-col gap-4 bg-white/80 dark:bg-slate-900/80 p-6 rounded-[32px] border border-surface-subtle shadow-2xl backdrop-blur-xl max-w-xs">
+          <div className="flex flex-col gap-4 bg-white/80 dark:bg-slate-900/80 p-6 rounded-4xl border border-surface-subtle shadow-2xl backdrop-blur-xl max-w-xs">
             {exibirLegenda && (
               <>
                 <div className="flex items-center gap-2 mb-2">
@@ -314,7 +407,7 @@ const GraphFlow = ({ nos, arestas, exibirLegenda = true }: GraphViewProps) => {
             </div>
           </div>
 
-          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-[24px] border border-surface-subtle shadow-2xl backdrop-blur-xl flex flex-col gap-2 no-export">
+          <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-3xl border border-surface-subtle shadow-2xl backdrop-blur-xl flex flex-col gap-2 no-export">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-1">Exportar</p>
             <div className="flex gap-2">
               <button
