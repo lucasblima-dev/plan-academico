@@ -84,12 +84,12 @@ async def planejar(request: PlanejamentoRequest):
         # Algoritmo 1 (Kahn), Algoritmo 2 (BFS)
         
         # Caso 1
-        p1_kahn = kahn_guloso(G, request.historico.semestre_atual, request.max_disciplinas, True)
-        p1_bfs = bfs_cpm(G, request.historico.semestre_atual, request.max_disciplinas, True)
+        p1_kahn = kahn_guloso(G, request.historico.semestre_atual, request.max_disciplinas, True, request.historico.periodo_atual)
+        p1_bfs = bfs_cpm(G, request.historico.semestre_atual, request.max_disciplinas, True, request.historico.periodo_atual)
         
         # Caso 2
-        p2_kahn = kahn_guloso(G, request.historico.semestre_atual, request.max_disciplinas, False)
-        p2_bfs = bfs_cpm(G, request.historico.semestre_atual, request.max_disciplinas, False)
+        p2_kahn = kahn_guloso(G, request.historico.semestre_atual, request.max_disciplinas, False, request.historico.periodo_atual)
+        p2_bfs = bfs_cpm(G, request.historico.semestre_atual, request.max_disciplinas, False, request.historico.periodo_atual)
         
         planos = [
             Plano(caso=1, algoritmo=1, semestres=p1_kahn, 

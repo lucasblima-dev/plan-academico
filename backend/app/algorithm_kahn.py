@@ -7,28 +7,13 @@ def kahn_guloso(
     semestre_atual_aluno: int,
     max_disciplinas: int,
     respeitar_oferta: bool,
+    periodo_atual_aluno: int = 1,
 ) -> List[SemestrePlano]:
     """
     Gera planejamento usando ordenação topológica (Kahn) com heurística gulosa (out-degree).
-
-    Args:
-        G: DAG das disciplinas pendentes.
-        semestre_atual_aluno: 1 (ímpar) ou 2 (par) - o semestre em que o aluno ESTÁ agora.
-                             O plano começa no PRÓXIMO semestre letivo? 
-                             Não, o GEMINI.md diz "Detecta semestre_atual a partir de Período Letivo Atual".
-                             Se Período 5 -> semestre_atual=1. 
-                             O planejamento deve começar no semestre_atual ou no próximo?
-                             Geralmente planejamento é para o futuro. 
-                             Mas o Algoritmo diz: "semestre = semestre_atual".
-                             Vamos assumir que semestre_atual_aluno é o tipo do primeiro semestre do plano.
     """
     G_trabalho = G.copy()
     planejamento = []
-    
-    # O semestre_atual_aluno aqui representa o tipo (1 ou 2) do primeiro semestre do planejamento.
-    # Se o aluno já está no semestre 1 (Ímpar), o plano pode ser para o semestre 2 (Par)?
-    # GEMINI.md seção 6 diz: "Detecta semestre_atual... API retorna HistoricoParseado: {semestre_atual...}".
-    # Vamos seguir o pseudocódigo: "semestre = semestre_atual".
     
     tipo_semestre_atual = semestre_atual_aluno
     numero_semestre_plano = 1
@@ -41,13 +26,20 @@ def kahn_guloso(
             # Isso não deveria acontecer em um DAG, a menos que haja erro na lógica
             break
 
+        # Filtrar candidatos pelo período recomendado (liberando optativas e UCEs)
+        periodo_do_plano = periodo_atual_aluno + numero_semestre_plano - 1
+        candidatos_permitidos = [
+            n for n in candidatos 
+            if G_trabalho.nodes[n].get('tipo') in ['optativa', 'uce'] or G_trabalho.nodes[n].get('periodo_recomendado', 1) <= periodo_do_plano
+        ]
+
         # 2. Filtrar por oferta se necessário
         if respeitar_oferta:
             # tipo_semestre_atual: 1 (ímpar), 2 (par)
             # disc.semestre_oferta: 1 (ímpar), 2 (par)
-            disponiveis = [n for n in candidatos if G_trabalho.nodes[n]['semestre_oferta'] == tipo_semestre_atual]
+            disponiveis = [n for n in candidatos_permitidos if G_trabalho.nodes[n]['semestre_oferta'] == tipo_semestre_atual]
         else:
-            disponiveis = candidatos
+            disponiveis = candidatos_permitidos
 
         # 3. Se não houver disponíveis por causa da oferta, avançamos o semestre
         if not disponiveis:

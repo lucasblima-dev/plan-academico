@@ -377,7 +377,7 @@
       "periodo_recomendado": 5,
       "creditos": 4,
       "carga_horaria": 60,
-      "semestre_oferta": 2,
+      "semestre_oferta": 1,
       "pre_requisitos": [
         "ESTDADOS"
       ],
@@ -473,7 +473,7 @@
       "periodo_recomendado": 6,
       "creditos": 4,
       "carga_horaria": 60,
-      "semestre_oferta": 1,
+      "semestre_oferta": 2,
       "pre_requisitos": [
         "ESTDADOS"
       ],

@@ -22,6 +22,7 @@ def bfs_cpm(
     semestre_atual_aluno: int,
     max_disciplinas: int,
     respeitar_oferta: bool,
+    periodo_atual_aluno: int = 1,
 ) -> List[SemestrePlano]:
     """
     Gera planejamento usando BFS por níveis com prioridade por caminho crítico.
@@ -43,11 +44,18 @@ def bfs_cpm(
         if not candidatos:
             break
 
+        # Filtrar candidatos pelo período recomendado (liberando optativas e UCEs)
+        periodo_do_plano = periodo_atual_aluno + numero_semestre_plano - 1
+        candidatos_permitidos = [
+            n for n in candidatos 
+            if G_trabalho.nodes[n].get('tipo') in ['optativa', 'uce'] or G_trabalho.nodes[n].get('periodo_recomendado', 1) <= periodo_do_plano
+        ]
+
         # 2. Filtrar por oferta se necessário
         if respeitar_oferta:
-            disponiveis = [n for n in candidatos if G_trabalho.nodes[n]['semestre_oferta'] == tipo_semestre_atual]
+            disponiveis = [n for n in candidatos_permitidos if G_trabalho.nodes[n]['semestre_oferta'] == tipo_semestre_atual]
         else:
-            disponiveis = candidatos
+            disponiveis = candidatos_permitidos
 
         # 3. Se não houver disponíveis por causa da oferta, avançamos o semestre
         if not disponiveis:

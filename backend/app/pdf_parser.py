@@ -47,14 +47,14 @@ SIGAA_PARA_ID: dict[str, str] = {
     "NCC0232": "TEOCOMP",    # Teoria da Computação
     "NCC0231": "REDES",      # Redes de Computadores
     "UCE0025": "UCE4",       # UCE 4ª ocorrência
-    # ── 6º período ──────────────────────────────────────────────────────────
     "NCC0233": "TEOGRAF",    # Teoria dos Grafos
+    # ── 6º período ──────────────────────────────────────────────────────────
     "NCC0236": "PRODCIENT",  # Produção Científica
     "UCE0026": "UCE5",       # UCE 5ª ocorrência
     "NCC0237": "SISDIST",    # Sistemas Distribuídos
     "NCC0235": "COMPGRAF",   # Computação Gráfica
-    # ── 7º período ──────────────────────────────────────────────────────────
     "NCC0234": "COMPALG",    # Complexidade de Algoritmos
+    # ── 7º período ──────────────────────────────────────────────────────────
     "NCC0238": "COMP",       # Compiladores
     "NCC0129": "PTCC",       # Projeto de TCC
     "UCE0027": "UCE6",       # UCE 6ª ocorrência
