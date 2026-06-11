@@ -11,6 +11,7 @@ import {
   Position,
   ReactFlowProvider,
   getNodesBounds,
+  MarkerType,
 } from '@xyflow/react'
 
 import type { NodeProps, Node } from '@xyflow/react'
@@ -77,8 +78,6 @@ function CustomNode({ data }: NodeProps) {
     nodeStyle = 'bg-node-approved border-green-600 text-white'
   } else if (nodeData.cursando) {
     nodeStyle = 'bg-node-cursando border-yellow-600 text-white'
-  } else if (nodeData.caminho_critico) {
-    nodeStyle = 'bg-node-critical border-orange-600 text-white'
   } else if (nodeData.disponivel) {
     nodeStyle = 'bg-node-available border-blue-600 text-white'
   }
@@ -241,6 +240,12 @@ const GraphFlow = ({ nos, arestas, exibirLegenda = true, isPlanejamento = false 
           strokeWidth: isCritical ? 3 : 2,
           opacity: isCritical ? 0.95 : 0.65
         },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: strokeColor,
+          width: 15,
+          height: 15,
+        },
       };
     });
 
@@ -385,7 +390,6 @@ const GraphFlow = ({ nos, arestas, exibirLegenda = true, isPlanejamento = false 
                   <LegendItem color="bg-node-approved" label="Aprovada" desc="Já concluída" />
                   <LegendItem color="bg-node-cursando" label="Cursando" desc="Matrícula atual" />
                   <LegendItem color="bg-node-available" label="Disponível" desc="Requisitos ok" />
-                  <LegendItem color="bg-node-critical" label="Crítico" desc="Prioridade alta" />
                   <LegendItem color="bg-node-blocked" label="Bloqueada" desc="Faltam requisitos" />
                 </div>
 
