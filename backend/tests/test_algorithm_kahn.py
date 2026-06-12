@@ -13,7 +13,6 @@ def test_kahn_topological_order():
         for disc in semestre.disciplinas:
             alocadas.append(disc.id)
             
-    # Re-verificando de forma mais rigorosa:
     alocadas_set = set()
     for semestre in plano:
         for disc in semestre.disciplinas:
@@ -24,7 +23,6 @@ def test_kahn_topological_order():
             alocadas_set.add(disc.id)
 
 def test_kahn_total_disciplinas():
-    """K2, K6: Todas as disciplinas alocadas."""
     G = build_graph([])
     total_esperado = G.number_of_nodes()
     plano = kahn_guloso(G, 1, 6, False)
@@ -33,7 +31,6 @@ def test_kahn_total_disciplinas():
     assert total_alocado == total_esperado
 
 def test_kahn_max_disciplinas():
-    """K3: max_disciplinas respeitado."""
     G = build_graph([])
     max_d = 5
     plano = kahn_guloso(G, 1, max_d, False)
@@ -42,7 +39,6 @@ def test_kahn_max_disciplinas():
         assert semestre.total_disciplinas <= max_d
 
 def test_kahn_caso1_oferta():
-    """K4, K5: Caso 1 respeita oferta."""
     G = build_graph([])
     # Semestre atual = 1 (Ímpar)
     plano = kahn_guloso(G, 1, 6, True)
@@ -50,7 +46,6 @@ def test_kahn_caso1_oferta():
     for semestre in plano:
         # Se semestre.numero é ímpar (1, 3, 5...), o tipo deve ser 1 (Ímpar)
         # Se semestre.numero é par (2, 4, 6...), o tipo deve ser 2 (Par)
-        # E as disciplinas devem bater com esse tipo
         tipo_esperado = 1 if semestre.numero % 2 != 0 else 2
         assert semestre.tipo_semestre == tipo_esperado
         
@@ -58,7 +53,6 @@ def test_kahn_caso1_oferta():
             assert disc.semestre_oferta == tipo_esperado
 
 def test_kahn_empty_graph():
-    """K8: Grafo vazio."""
     G = nx.DiGraph()
     plano = kahn_guloso(G, 1, 6, False)
     assert plano == []

@@ -14,7 +14,7 @@ GRADE_PATH = Path(__file__).parent.parent / "data" / "grade.json"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Gerencia o ciclo de vida da aplicação (Lifespan)."""
+    # Gerencia o ciclo de vida da aplicação
     logger.info("Iniciando validação da grade curricular...")
     try:
         if not GRADE_PATH.exists():
@@ -56,7 +56,6 @@ from .models import Plano
 
 @app.post("/api/parse-historico", response_model=HistoricoParseado)
 async def parse_historico(historico: UploadFile = File(...)):
-    """Realiza o parse do PDF do histórico SIGAA."""
     if not historico.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=422, detail="O arquivo enviado deve ser um PDF.")
     
@@ -71,17 +70,10 @@ async def parse_historico(historico: UploadFile = File(...)):
 
 @app.post("/api/planejar", response_model=ResultadoPlanejar)
 async def planejar(request: PlanejamentoRequest):
-    """Gera o planejamento acadêmico usando dois algoritmos para dois casos."""
     try:
-        # 1. Conciliar aprovadas (PDF + Manual)
         aprovadas = list(set(request.historico.disciplinas_aprovadas + request.aprovadas_manualmente))
         
-        # 2. Construir DAG de pendentes
         G = build_graph(aprovadas)
-        
-        # 3. Executar os 4 planejamentos (2 casos x 2 algoritmos)
-        # Caso 1 (respeitar_oferta=True), Caso 2 (respeitar_oferta=False)
-        # Algoritmo 1 (Kahn), Algoritmo 2 (BFS)
         
         # Caso 1
         p1_kahn = kahn_guloso(G, request.historico.semestre_atual, request.max_disciplinas, True, request.historico.periodo_atual)
@@ -110,7 +102,6 @@ async def planejar(request: PlanejamentoRequest):
                   total_carga_horaria=sum(s.total_carga_horaria for s in p2_bfs)),
         ]
         
-        # 4. Preparar dados do grafo para o frontend
         G_completo = get_full_graph()
         cpm = calcular_cpm(G)
         disponiveis = [n for n in G.nodes() if G.in_degree(n) == 0]
@@ -139,7 +130,6 @@ async def planejar(request: PlanejamentoRequest):
 
 @app.get("/api/grade")
 async def get_grade():
-    """Retorna o conteúdo do grade.json."""
     try:
         with open(GRADE_PATH, "r", encoding="utf-8") as f:
             return json.load(f)

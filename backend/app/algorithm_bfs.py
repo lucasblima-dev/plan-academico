@@ -3,10 +3,6 @@ from typing import List, Dict
 from .models import SemestrePlano, DisciplinaPlano
 
 def calcular_cpm(G: nx.DiGraph) -> Dict[str, int]:
-    """
-    Calcula o comprimento do maior caminho (em número de nós) de cada nó 
-    até qualquer folha do grafo.
-    """
     cpm = {}
     # Ordenação topológica reversa para garantir que processamos sucessores antes de predecessores
     for node in reversed(list(nx.topological_sort(G))):
@@ -38,36 +34,30 @@ def bfs_cpm(
     numero_semestre_plano = 1
 
     while G_trabalho.number_of_nodes() > 0:
-        # 1. Identificar candidatos (in-degree zero)
         candidatos = [n for n in G_trabalho.nodes() if G_trabalho.in_degree(n) == 0]
         
         if not candidatos:
             break
 
-        # Filtrar candidatos pelo período recomendado (liberando optativas e UCEs)
         periodo_do_plano = periodo_atual_aluno + numero_semestre_plano - 1
         candidatos_permitidos = [
             n for n in candidatos 
             if G_trabalho.nodes[n].get('tipo') in ['optativa', 'uce'] or G_trabalho.nodes[n].get('periodo_recomendado', 1) <= periodo_do_plano
         ]
 
-        # 2. Filtrar por oferta se necessário
         if respeitar_oferta:
             disponiveis = [n for n in candidatos_permitidos if G_trabalho.nodes[n]['semestre_oferta'] == tipo_semestre_atual]
         else:
             disponiveis = candidatos_permitidos
 
-        # 3. Se não houver disponíveis por causa da oferta, avançamos o semestre
         if not disponiveis:
             tipo_semestre_atual = 1 if tipo_semestre_atual == 2 else 2
             numero_semestre_plano += 1
             if numero_semestre_plano > 50: break
             continue
 
-        # 4. Prioridade por Caminho Crítico (CPM) decrescente
         disponiveis.sort(key=lambda n: cpm[n], reverse=True)
 
-        # 5. Selecionar até max_disciplinas respeitando a restrição de 1 UCE por semestre
         selecionados = []
         tem_uce = False
         
@@ -83,7 +73,6 @@ def bfs_cpm(
             else:
                 selecionados.append(n)
 
-        # 6. Criar objeto SemestrePlano
         disciplinas_plano = []
         total_ch = 0
         for s_id in selecionados:
@@ -106,7 +95,6 @@ def bfs_cpm(
             total_carga_horaria=total_ch
         ))
 
-        # 7. Remover do grafo e atualizar
         G_trabalho.remove_nodes_from(selecionados)
         
         tipo_semestre_atual = 1 if tipo_semestre_atual == 2 else 2

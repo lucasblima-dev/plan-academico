@@ -94,18 +94,15 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
             if match_nome:
                 nome_aluno = match_nome.group(1).strip()
 
-        # Extrair Matrícula
         match_matr = re.search(r"Matrícula:\s+(\d+)", primeira_pagina)
         if match_matr:
             matricula = match_matr.group(1).strip()
 
-        # Extrair Período Letivo Atual
         match_periodo = re.search(r"Período Letivo Atual:\s+(\d+)", primeira_pagina)
         if match_periodo:
             periodo_atual = int(match_periodo.group(1))
             semestre_atual = 1 if periodo_atual % 2 != 0 else 2
 
-        # Extrair componentes curriculares
         for page in pdf.pages:
             tables = page.extract_tables()
             for table in tables:
@@ -120,7 +117,6 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
                 idx_nome = 3
                 idx_sit = -1
                 
-                # Tentar encontrar a coluna Situação dinamicamente
                 for i, col in enumerate(table[0]):
                     if col and "situação" in col.lower():
                         idx_sit = i
@@ -175,7 +171,6 @@ def parse_historico(pdf_bytes: bytes) -> HistoricoParseado:
                                 situacao=situacao
                             ))
 
-    # Remover duplicatas mantendo a ordem
     disciplinas_aprovadas = list(dict.fromkeys(disciplinas_aprovadas))
     disciplinas_cursando = list(dict.fromkeys(disciplinas_cursando))
 

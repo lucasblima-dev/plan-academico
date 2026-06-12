@@ -11,6 +11,8 @@ dist/
 .vscode/
 .idea/
 
+*.vite
+
 # Dados para teste/validação
 
 docs/TASK.md

@@ -17,7 +17,6 @@ def test_calcular_cpm():
     assert cpm["D"] == 2
 
 def test_bfs_topological_order():
-    """K1 (aplicado ao BFS): Ordem topológica respeitada."""
     G = build_graph([])
     plano = bfs_cpm(G, 1, 6, False)
     
@@ -31,7 +30,6 @@ def test_bfs_topological_order():
             alocadas_set.add(disc.id)
 
 def test_bfs_cpm_efficiency():
-    """B4: BFS CPM tende a ser igual ou melhor que Kahn em semestres."""
     from app.algorithm_kahn import kahn_guloso
     G = build_graph([])
     
@@ -41,7 +39,6 @@ def test_bfs_cpm_efficiency():
     assert len(p_bfs) <= len(p_kahn)
 
 def test_critical_path_priority():
-    """B5: TCC deve estar entre os últimos semestres e após PTCC."""
     G = build_graph([])
     plano = bfs_cpm(G, 1, 6, True)
     

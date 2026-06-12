@@ -12,13 +12,11 @@ def validar_grade_json(grade: dict) -> list[str]:
     campos_obrigatorios = ["id", "nome", "periodo_recomendado", "creditos", "carga_horaria", "semestre_oferta", "pre_requisitos", "tipo"]
 
     for idx, disc in enumerate(grade["disciplinas"]):
-        # Verificar campos obrigatórios
         for campo in campos_obrigatorios:
             if campo not in disc:
                 nome_disc = disc.get("id", f"índice {idx}")
                 erros.append(f"Disciplina '{nome_disc}' está sem o campo obrigatório '{campo}'.")
         
-        # Verificar pré-requisitos
         if "pre_requisitos" in disc:
             for pre in disc["pre_requisitos"]:
                 if pre not in ids_existentes:

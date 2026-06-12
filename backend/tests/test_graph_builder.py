@@ -3,14 +3,11 @@ import networkx as nx
 from app.graph_builder import build_graph
 
 def test_build_graph_empty_aprovadas():
-    """G1: Com lista vazia: grafo tem todos os nós da grade."""
     G = build_graph([])
-    # Número de disciplinas na grade.json (pode variar, mas deve ser > 0)
     assert G.number_of_nodes() > 0
     assert nx.is_directed_acyclic_graph(G)
 
 def test_build_graph_lucas_aprovadas():
-    """G2: Com aprovadas de Lucas: nós corretos no grafo."""
     lucas_aprovadas = [
         "ALGPROG", "MATFUND", "FILOS", "FISCOMP", "LOGMAT", "TECS", "PRODTXT1",
         "CALC1", "PROBEST", "METCIENT", "INGLES", "CIRCDIG", "GEOANA", "TECPROG",
@@ -24,12 +21,10 @@ def test_build_graph_lucas_aprovadas():
     assert "TEOCOMP" in G.nodes
     assert "TEOGRAF" in G.nodes
     
-    # Disciplinas aprovadas não devem estar no grafo (G7)
     assert "ALGPROG" not in G.nodes
     assert "ESTDADOS" not in G.nodes
 
 def test_graph_attributes():
-    """G5, G6: Atributos presentes nos nós."""
     G = build_graph([])
     for node, attrs in G.nodes(data=True):
         assert "semestre_oferta" in attrs
@@ -38,17 +33,14 @@ def test_graph_attributes():
         assert "periodo_recommended" in attrs or "periodo_recomendado" in attrs
 
 def test_graph_edges():
-    """G4: Arestas corretas."""
     G = build_graph([])
-    # TECPROG -> ESTDADOS existe?
     assert G.has_edge("TECPROG", "ESTDADOS")
 
 def test_detect_cycle(tmp_path, monkeypatch):
-    """G8: Lança ValueError com grade cíclica."""
     import json
     from app import graph_builder
     
-    # Criar grade sintética com ciclo
+    # Grade sintética com ciclo
     grade_ciclo = {
         "disciplinas": [
             {
